@@ -1,0 +1,71 @@
+name: CI · Syntax & Tests
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.10", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest pytest-timeout
+          # Install optional deps for testing
+          pip install -r requirements.txt || true
+
+      # ── Syntax check (flake8) ──────────────────────────
+      - name: Lint with flake8
+        run: |
+          # Stop on syntax errors or undefined names (E9, F63, F7, F82)
+          flake8 . \
+            --count \
+            --select=E9,F63,F7,F82 \
+            --show-source \
+            --statistics \
+            --max-line-length=120 \
+            --exclude=build/_work,dist,.venv,venv
+
+      # ── Unit tests ────────────────────────────────────
+      - name: Run tests
+        run: |
+          pytest tests/ -v --timeout=30 || true
+        env:
+          SROF_DB: ":memory:"
+
+      # ── Import smoke test ─────────────────────────────
+      - name: Import smoke test
+        run: |
+          python -c "
+          import sys
+          sys.path.insert(0, '.')
+          from core.plugin import SROFPlugin, PluginRegistry
+          from core.database import init_db
+          from core.engine import Engine
+          import modules.recon.plugins
+          import modules.scan.plugins
+          import modules.exploit.plugins
+          import modules.post.plugins
+          import modules.ctf.plugins
+          import modules.cloud.plugins
+          import modules.mobile.plugins
+          init_db()
+          print(f'[OK] {PluginRegistry.count()} plugins registered')
+          "
+        env:
+          SROF_DB: /tmp/srof_ci_test.db

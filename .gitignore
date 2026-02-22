@@ -1,0 +1,50 @@
+# ── Python ───────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/_work/
+.eggs/
+pip-wheel-metadata/
+
+# ── Virtual environments ──────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ── PyInstaller ───────────────────────────────────────────
+*.spec
+
+# ── SROF runtime data ─────────────────────────────────────
+data/srof.db
+data/output/
+reports/SROF_Report_*.md
+reports/SROF_Report_*.html
+
+# ── Test / Coverage ───────────────────────────────────────
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+htmlcov/
+
+# ── IDE ───────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*~
+
+# ── OS ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

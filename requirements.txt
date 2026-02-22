@@ -1,0 +1,14 @@
+# ALFANET SROF · Python Requirements
+#
+# Core runtime: Python 3.8+, zero mandatory pip deps
+# (GUI uses stdlib tkinter, DB uses stdlib sqlite3)
+#
+# Optional: install only what you need
+
+# ── Packaging ────────────────────────────────────────────
+pyinstaller>=5.13
+
+# ── Dev / CI ─────────────────────────────────────────────
+flake8>=6.0
+pytest>=7.4
+pytest-timeout>=2.1
